@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import org.rivera.hibernateapp.entity.Cliente;
 import org.rivera.hibernateapp.util.JpaUtil;
 
+//Este paquete solo es para mostrar estructura del crud
 public class CrearHibernate {
 
   public static void main(String[] args) {
