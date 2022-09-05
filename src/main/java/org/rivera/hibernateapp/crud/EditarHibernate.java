@@ -11,7 +11,7 @@ public class EditarHibernate {
     EntityManager em = JpaUtil.getEntityManager();
     try {
       Long id = 2L;   //Importante tenerlo para actualizar
-      Cliente c = em.find(Cliente.class, id);     //Lo obtengo de la DB
+      Cliente c = em.find(Cliente.class, id);     //Lo obtengo de la DB y crea el objeto
 
       String name = "Nombre modificado";
       String lastName = "Apellido modificado";
