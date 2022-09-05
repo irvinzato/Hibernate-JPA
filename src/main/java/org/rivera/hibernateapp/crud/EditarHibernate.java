@@ -4,27 +4,29 @@ import jakarta.persistence.EntityManager;
 import org.rivera.hibernateapp.entity.Cliente;
 import org.rivera.hibernateapp.util.JpaUtil;
 
-public class CrearHibernate {
+public class EditarHibernate {
 
   public static void main(String[] args) {
 
-    //Importante estructura del try, catch y finally con los "getTransaction"
     EntityManager em = JpaUtil.getEntityManager();
     try {
-      String name = "Nombre de prueba";
-      String lastName = "Apellido de prueba";
-      String pay = "debito";
+      Long id = 2L;   //Importante tenerlo para actualizar
+      Cliente c = em.find(Cliente.class, id);     //Lo obtengo de la DB
+
+      String name = "Nombre modificado";
+      String lastName = "Apellido modificado";
+      String pay = "Nueva forma de pago";
 
       em.getTransaction().begin();
 
-      Cliente c = new Cliente();
       c.setName(name);
       c.setLastName(lastName);
       c.setWayToPay(pay);
 
-      em.persist(c);  //Hace consulta "INSERT INTO clientes (nombre, apellido, forma_pago) VALUES (?,?,?)"
+      em.merge(c);    //Hace consulta "UPDATE clientes SET name=?, lastName=?, forma_pago=? WHERE id=?"
 
       em.getTransaction().commit();
+
     }catch( Exception e ) {
       em.getTransaction().rollback();
       e.printStackTrace();
