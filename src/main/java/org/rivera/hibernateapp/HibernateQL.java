@@ -113,6 +113,49 @@ public class HibernateQL {
                     .getResultList();
     clientCoins.forEach(System.out::println);
 
+    System.out.println("======= Consulta para total de registro en la tabla =======");
+    Long total = em.createQuery("SELECT COUNT(c) FROM Cliente c", Long.class)
+                    .getSingleResult();
+    System.out.println(total);
+
+    System.out.println("======= Consulta para valor MÍNIMO de CUALQUIER campo numérico(Este caso ID) =======");
+    total = em.createQuery("SELECT MIN(c.id) FROM Cliente c", Long.class)
+                    .getSingleResult();
+    System.out.println(total);
+
+    System.out.println("======= Consulta para valor MÁXIMO/ULTIMO de CUALQUIER campo numérico(Este caso ID) =======");
+    total = em.createQuery("SELECT MAX(c.id) FROM Cliente c", Long.class)
+                    .getSingleResult();
+    System.out.println(total);
+
+    System.out.println("======= Consulta con nombre y largo de todos los registros (LENGTH) =======");
+    List<Object[]> lengthNames = em.createQuery("SELECT c.name, LENGTH(c.name) FROM Cliente c", Object[].class)
+                    .getResultList();
+    lengthNames.forEach(reg -> {
+      String nameLen = (String) reg[0];
+      Integer large = (Integer) reg[1];
+      System.out.println("Nombre - " + nameLen + " con largo - " + large);
+    });
+
+    System.out.println("======= Consulta para el nombre mas CORTO(EN TAMAÑO) =======");
+    Integer minNameLarge = em.createQuery("SELECT MIN(LENGTH(c.name)) FROM Cliente c", Integer.class)
+                    .getSingleResult();
+    System.out.println(minNameLarge);
+
+    System.out.println("======= Consulta para el nombre mas LARGO(EN TAMAÑO) =======");
+    Integer maxNameLarge = em.createQuery("SELECT MAX(LENGTH(c.name)) FROM Cliente c", Integer.class)
+                    .getSingleResult();
+    System.out.println(maxNameLarge);
+
+    System.out.println("======= Consulta para ESTADÍSTICAS, funciones agregaciones MIN, MAX, SUM, COUNT, AVG  =======");
+    Object[] statistics = em.createQuery("SELECT MIN(c.id), MAX(c.id), SUM(c.id), COUNT(c.id), AVG(LENGTH(c.name)) FROM Cliente c", Object[].class)
+                    .getSingleResult();
+    Long minStatistics = (Long) statistics[0];  //Porque los ids son tipo Long
+    Long maxStatistics = (Long) statistics[1];
+    Long sumStatistics = (Long) statistics[2];
+    Long countStatistics = (Long) statistics[3];
+    Double avgStatistics = (Double) statistics[4];
+    System.out.println("MIN - " + minStatistics + " MAX - " + maxStatistics + " SUMA - " + sumStatistics + " COUNT - " + countStatistics + " PROMEDIO LARGO DEL NOMBRE - " + avgStatistics);
 
 
     System.out.println("======= Pruebas =======");
