@@ -23,6 +23,11 @@ public class Cliente {
   public Cliente() {
   }
 
+  public Cliente(String name, String lastName) {
+    this.name = name;
+    this.lastName = lastName;
+  }
+
   public Long getId() {
     return id;
   }
