@@ -90,15 +90,28 @@ public class HibernateQL {
                     .getResultList();
     listNames.forEach(System.out::println);
 
-    System.out.println("======= Consulta con LIKE y parámetro por nombre =======");
+    System.out.println("======= Consulta con LIKE(coincidencias) y parámetro por nombre ======="); //Como buena práctica consultar en lower o upper ambos
     List<Cliente> clientCoins = em.createQuery("SELECT c FROM Cliente c WHERE c.name LIKE :parametro", Cliente.class)
                     .setParameter("parametro", "%" + "ma" + "%") //Ocupa los "%" para que busque izquierda y derecha la coincidencia
                     .getResultList();
     clientCoins.forEach(System.out::println);
 
+    System.out.println("======= Consulta con BETWEEN - Sirve para rangos en tipo de datos numéricos, fechas o rango de caracteres =======");
+    System.out.println("======= Rango de id´s =======");
+    clientCoins = em.createQuery("SELECT c FROM Cliente c WHERE c.id BETWEEN 2 AND 5", Cliente.class)
+                    .getResultList();
+    clientCoins.forEach(System.out::println);
 
+    System.out.println("======= Rango de caracteres - No se incluye el ultimo carácter =======");
+    clientCoins = em.createQuery("SELECT c FROM Cliente c WHERE c.name BETWEEN 'J' AND 'P'", Cliente.class)
+                    .getResultList();
+    clientCoins.forEach(System.out::println);
 
-
+    System.out.println("======= Consulta con ORDER BY - ordenamiento puede ser ASC O DESC =======");
+    System.out.println("======= Puedo utilizar dos parámetros, uno ASC y el otro también(O a criterio) por si hay repetidos =======");
+    clientCoins = em.createQuery("SELECT c FROM Cliente c ORDER BY c.name ASC", Cliente.class)
+                    .getResultList();
+    clientCoins.forEach(System.out::println);
 
 
 
