@@ -14,6 +14,7 @@ public class HibernateQL {
 
     EntityManager em = JpaUtil.getEntityManager();
 
+    System.out.println("======= CONSULTAS JPQL =======");
     //Es importante utilizar el valor de los campos del objeto entity para hacer consultas SQL
     System.out.println("======= Consulta para lista de Clientes =======");
     List<Cliente> clientsList = em.createQuery("SELECT c FROM Cliente c", Cliente.class)
