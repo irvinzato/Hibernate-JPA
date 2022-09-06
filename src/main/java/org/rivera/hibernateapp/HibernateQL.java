@@ -65,6 +65,20 @@ public class HibernateQL {
                     .getResultList();
     clientsListDto.forEach(System.out::println);
 
+    System.out.println("======= Lista de Cliente con solo el nombre =======");
+    List<String> listNames = em.createQuery("SELECT c.name FROM Cliente c", String.class)
+                    .getResultList();
+    listNames.forEach(System.out::println);
+
+    System.out.println("======= Consulta con DISTINCT para nombres únicos de tabla clientes =======");
+    listNames = em.createQuery("SELECT DISTINCT(c.name) FROM Cliente c", String.class)
+                    .getResultList();
+    listNames.forEach(System.out::println);
+
+    System.out.println("======= Consulta con COUNT para total de formas de pago =======");
+    Long totalPays = em.createQuery("SELECT COUNT(DISTINCT(c.wayToPay)) FROM Cliente c", Long.class)
+                    .getSingleResult();
+    System.out.println("Maneras de pagar - " + totalPays);
 
 
 
