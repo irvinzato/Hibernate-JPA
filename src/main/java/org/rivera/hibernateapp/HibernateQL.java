@@ -80,7 +80,21 @@ public class HibernateQL {
                     .getSingleResult();
     System.out.println("Maneras de pagar - " + totalPays);
 
+    System.out.println("======= Consulta con CONCAT para nombre y apellido =======");
+    listNames = em.createQuery("SELECT CONCAT(c.name, ' ', c.lastName) FROM Cliente c", String.class)
+                    .getResultList();
+    listNames.forEach(System.out::println);
 
+    System.out.println("======= Consulta con CONCAT para nombre y apellido usando UPPER O LOWER =======");
+    listNames = em.createQuery("SELECT UPPER(CONCAT(c.name, ' ', c.lastName)) FROM Cliente c", String.class)
+                    .getResultList();
+    listNames.forEach(System.out::println);
+
+    System.out.println("======= Consulta con LIKE y parámetro por nombre =======");
+    List<Cliente> clientCoins = em.createQuery("SELECT c FROM Cliente c WHERE c.name LIKE :parametro", Cliente.class)
+                    .setParameter("parametro", "%" + "ma" + "%") //Ocupa los "%" para que busque izquierda y derecha la coincidencia
+                    .getResultList();
+    clientCoins.forEach(System.out::println);
 
 
 
