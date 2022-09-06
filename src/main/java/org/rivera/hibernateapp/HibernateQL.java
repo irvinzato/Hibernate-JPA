@@ -5,6 +5,7 @@ import org.rivera.hibernateapp.dto.ClienteDto;
 import org.rivera.hibernateapp.entity.Cliente;
 import org.rivera.hibernateapp.util.JpaUtil;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class HibernateQL {
@@ -156,6 +157,40 @@ public class HibernateQL {
     Long countStatistics = (Long) statistics[3];
     Double avgStatistics = (Double) statistics[4];
     System.out.println("MIN - " + minStatistics + " MAX - " + maxStatistics + " SUMA - " + sumStatistics + " COUNT - " + countStatistics + " PROMEDIO LARGO DEL NOMBRE - " + avgStatistics);
+
+    System.out.println("======= =================================== =======");
+    System.out.println("======= ¡ SUB QUERIES O SUB CONSULTAS ! =======");
+    System.out.println("======= =================================== =======");
+    System.out.println("======= Consulta para el nombre mas CORTO y su largo =======");
+    //PUEDE SER LIST porque puede haber muchos con el mismo tamaño corto o largo
+    List<Object[]> subQueries = em.createQuery("SELECT c.name, LENGTH(c.name) FROM Cliente c WHERE LENGTH(c.name) = (SELECT MIN(LENGTH(c.name)) FROM Cliente c)", Object[].class)
+                    .getResultList();
+    subQueries.forEach( reg ->  {
+      String nameReg = (String) reg[0];
+      Integer largeReg = (Integer) reg[1];
+      System.out.println("Nombre - " + nameReg + " Largo - " + largeReg);
+    });
+
+    System.out.println("======= Consulta para el nombre mas GRANDE y su largo =======");
+    subQueries = em.createQuery("SELECT c.name, LENGTH(c.name) FROM Cliente c WHERE LENGTH(c.name) = (SELECT MAX(LENGTH(c.name)) FROM Cliente c)", Object[].class)
+                    .getResultList();
+    subQueries.forEach( reg ->  {
+      String nameReg = (String) reg[0];
+      Integer largeReg = (Integer) reg[1];
+      System.out.println("Nombre - " + nameReg + " Largo - " + largeReg);
+    });
+
+    System.out.println("======= Consulta para obtener el ultimo registro =======");
+    Cliente lastClient = em.createQuery("SELECT c FROM Cliente c WHERE c.id = (SELECT MAX(c.id) FROM Cliente c)", Cliente.class)
+                    .getSingleResult();
+    System.out.println(lastClient);
+
+    System.out.println("======= Consulta WHERE IN (Un subconjunto) =======");
+    List<Cliente> clientsIn = em.createQuery("SELECT c FROM Cliente c WHERE c.id IN :ids", Cliente.class)
+                    .setParameter("ids", Arrays.asList(2L, 3L, 6L, 30L))  //Si no existe lo omite
+                    .getResultList();
+    clientsIn.forEach(System.out::println);
+
 
 
     System.out.println("======= Pruebas =======");
