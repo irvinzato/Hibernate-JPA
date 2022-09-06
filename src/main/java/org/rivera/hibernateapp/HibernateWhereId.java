@@ -11,7 +11,7 @@ public class HibernateWhereId {
 
     //Solo funciona cuando quiero buscar por "id", el find hace una consulta WHERE id de la tabla "clientes"
     EntityManager em = JpaUtil.getEntityManager();
-    Cliente c = em.find(Cliente.class, 2);
+    Cliente c = em.find(Cliente.class, 2L);   //El parámetro id es tipo long
 
     System.out.println(c);
     em.close();

@@ -11,12 +11,12 @@ public class EditarHibernate {
 
     EntityManager em = JpaUtil.getEntityManager();
     try {
-      Long id = 2L;   //Importante tenerlo para actualizar
+      Long id = 4L;   //Importante tenerlo para actualizar
       Cliente c = em.find(Cliente.class, id);     //Lo obtengo de la DB y crea el objeto
 
       String name = "Nombre modificado";
       String lastName = "Apellido modificado";
-      String pay = "Nueva forma de pago";
+      String pay = "paypal";
 
       em.getTransaction().begin();
 

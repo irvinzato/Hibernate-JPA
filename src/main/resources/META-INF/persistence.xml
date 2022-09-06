@@ -5,7 +5,7 @@
         <class> org.rivera.hibernateapp.entity.Cliente </class>
         <properties>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/java_curso?serverTimezone=GMT-5" />
-            <property name="jakarta.persistence.jdbc.username" value="root" />
+            <property name="jakarta.persistence.jdbc.user" value="root" />
             <property name="jakarta.persistence.jdbc.password" value="sasa" />
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />

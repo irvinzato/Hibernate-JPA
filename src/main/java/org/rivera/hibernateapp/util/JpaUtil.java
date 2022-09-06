@@ -10,7 +10,12 @@ public class JpaUtil {
   private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = buildEntityManagerFactory();
 
   private static EntityManagerFactory buildEntityManagerFactory() {
-    return Persistence.createEntityManagerFactory("ejemploJPA"); //Nombre que le dí en "persistence.xml"
+    try {
+      return Persistence.createEntityManagerFactory("ejemploJPA"); //Nombre que le dí en "persistence.xml"
+    } catch (Exception e) {
+      System.out.println("----------------" + e.getMessage());
+    }
+    return null;
   }
 
   //EntityManager UNO PARA CADA CLIENTE(request, hilo) !

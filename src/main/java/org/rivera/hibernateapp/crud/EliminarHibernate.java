@@ -11,7 +11,7 @@ public class EliminarHibernate {
 
     EntityManager em = JpaUtil.getEntityManager();
     try {
-      Long id = 3L;
+      Long id = 4L;
       Cliente c = em.find(Cliente.class, id);  //Crea el objeto por id
 
       em.getTransaction().begin();
