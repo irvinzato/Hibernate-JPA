@@ -11,14 +11,15 @@ public class HibernateQL {
 
     EntityManager em = JpaUtil.getEntityManager();
 
+    //Es importante utilizar el valor de los campos del objeto entity para hacer consultas SQL
     System.out.println("======= Consulta solo el nombre por id =======");
-    String nameClient = em.createQuery("SELECT c.nombre FROM Cliente c WHERE c.id=:id", String.class) //Otra forma de pasar parámetros(En lugar de "=?1")
+    String nameClient = em.createQuery("SELECT c.name FROM Cliente c WHERE c.id=:id", String.class) //Otra forma de pasar parámetros(En lugar de "=?1")
             .setParameter("id", 2L)
             .getSingleResult();
     System.out.println(nameClient);
 
     System.out.println("======= Consulta por campos personalizados de un registro =======");
-    Object[] objectClient = em.createQuery("SELECT c.id, c.nombre, c.apellido FROM Cliente c WHERE c.id=:id", Object[].class)
+    Object[] objectClient = em.createQuery("SELECT c.id, c.name, c.lastName FROM Cliente c WHERE c.id=:id", Object[].class)
             .setParameter("id", 2L)
             .getSingleResult();
     Long id = (Long) objectClient[0];
@@ -27,7 +28,7 @@ public class HibernateQL {
     System.out.println("Id encontrado - " + id + " con nombre - " + name + " y apellido - " + lastName);
 
     System.out.println("======= Consulta por campos personalizados de varios registros =======");
-    List<Object[]> listClientsPer = em.createQuery("SELECT c.id, c.nombre, c.apellido FROM Cliente c", Object[].class)
+    List<Object[]> listClientsPer = em.createQuery("SELECT c.id, c.name, c.lastName FROM Cliente c", Object[].class)
             .getResultList();
     for( Object[] reg: listClientsPer ) {
       id = (Long) reg[0];
@@ -35,6 +36,13 @@ public class HibernateQL {
       lastName = (String) reg[2];
       System.out.println("Id encontrado - " + id + " con nombre - " + name + " y apellido - " + lastName);
     }
+
+    System.out.println("======= Pruebas =======");
+    String prueba = em.createQuery("SELECT c.lastName FROM Cliente c WHERE c.name=:name", String.class)
+            .setParameter("name", "Jade")
+            .getSingleResult();
+    System.out.println(prueba);
+
 
     em.close();
 

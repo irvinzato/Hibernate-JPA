@@ -11,7 +11,7 @@ public class Cliente {
   private Long id;
 
   @Column(name = "nombre")    //Como no se llaman igual que la tabla se lo indico
-  private String name;
+  private String name;        //Importante el valor en objeto y valor en base de datos para hacer consultas
 
   @Column(name = "apellido")
   private String lastName;
