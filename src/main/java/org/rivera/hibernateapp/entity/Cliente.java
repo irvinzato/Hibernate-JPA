@@ -22,12 +22,9 @@ public class Cliente {
   @Column(name = "forma_pago")
   private String wayToPay;
 
-  //Columnas añadidas en práctica de eventos del ciclo de vida
-  @Column(name = "creado_en")
-  private LocalDateTime createIn;
+  @Embedded   //Que se incluye alguna otra clase(TODOS LOS ATRIBUTOS, TODO EL CONTENIDO)
+  private Auditoria aud = new Auditoria();
 
-  @Column(name = "editado_en")
-  private LocalDateTime editedIn;
 
   // ¡Siempre debe haber un constructor vacío! para que JPA pueda instancear la clase
   public Cliente() {
@@ -36,19 +33,6 @@ public class Cliente {
   public Cliente(String name, String lastName) {
     this.name = name;
     this.lastName = lastName;
-  }
-
-  //EVENTOS DE CICLO DE VIDA - UNA FUNCIÓN BASTANTE UTIL ES USARLOS PARA FECHAS DE CUANDO SE CREA ALGÚN REGISTRO O SE EDITA
-  @PrePersist
-  public void prePersist() {
-    System.out.println("Inicializar algo antes del PERSIST()");
-    this.createIn = LocalDateTime.now();    //Pongo fecha cuando es creado
-  }
-
-  @PreUpdate
-  public void preUpdate() {
-    System.out.println("Inicializar algo antes del UPDATE");
-    this.editedIn = LocalDateTime.now();    //Pongo fecha cuando es editado
   }
 
   public Long getId() {
@@ -83,24 +67,10 @@ public class Cliente {
     this.wayToPay = wayToPay;
   }
 
-  public LocalDateTime getCreateIn() {
-    return createIn;
-  }
-
-  public void setCreateIn(LocalDateTime createIn) {
-    this.createIn = createIn;
-  }
-
-  public LocalDateTime getEditedIn() {
-    return editedIn;
-  }
-
-  public void setEditedIn(LocalDateTime editedIn) {
-    this.editedIn = editedIn;
-  }
-
   @Override
   public String toString() {
+    LocalDateTime createIn = this.aud != null ?aud.getCreateIn() :null;
+    LocalDateTime editedIn = this.aud != null ?aud.getEditedIn() :null;
     return "Cliente " +
             "id=" + id +
             ", name='" + name +
