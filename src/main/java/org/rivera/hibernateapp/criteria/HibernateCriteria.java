@@ -28,8 +28,9 @@ public class HibernateCriteria {
     clients.forEach(System.out::println);
 
     System.out.println("======= Listar todos los nombres iguales - Where y Equal =======");
-    query = criteriaBuilder.createQuery(Cliente.class);   //Reutilizo las variables para reiniciar la consulta
-    from = query.from(Cliente.class);
+    //Reutilizo las variables para reiniciar la consulta
+    query = criteriaBuilder.createQuery(Cliente.class);    //Criterio que devuelve
+    from = query.from(Cliente.class);                      //De donde
 
     query.select(from).where(criteriaBuilder.equal(from.get("name"), "Mauricio"));
     clients = em.createQuery(query)
@@ -39,13 +40,53 @@ public class HibernateCriteria {
     System.out.println("======= Listar todos los nombres iguales con parámetro - Where y Equal =======");
     query = criteriaBuilder.createQuery(Cliente.class);   //Reutilizo las variables para reiniciar la consulta
     from = query.from(Cliente.class);
-    ParameterExpression<String> nameParam = criteriaBuilder.parameter(String.class, "name");
+    ParameterExpression<String> nameParam = criteriaBuilder.parameter(String.class, "nameQuery");
 
     query.select(from).where(criteriaBuilder.equal(from.get("name"), nameParam));
     clients = em.createQuery(query)
-                    .setParameter("name", "Jade")
+                    .setParameter("nameQuery", "Jade")
                     .getResultList();
     clients.forEach(System.out::println);
+
+    System.out.println("======= Clientes por nombre(coincidencias) - Where y Like =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+    query.select(from).where(criteriaBuilder.like(from.get("name"), "%lu%")); //Importante los espacios entre los porcentajes
+    clients = em.createQuery(query)
+                    .getResultList();
+    clients.forEach(System.out::println);
+
+    System.out.println("======= Clientes por nombre(coincidencias) con parámetros - Where y Like =======");
+    System.out.println("======= Como buena práctica utilizar UPPER O LOWER para comparar valores =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+    ParameterExpression<String> searchLike = criteriaBuilder.parameter(String.class, "textLikeQuery");
+    query.select(from).where(criteriaBuilder.like(criteriaBuilder.upper(from.get("name")), criteriaBuilder.upper(searchLike)));
+    clients = em.createQuery(query)
+                    .setParameter("textLikeQuery", "%au%")
+                    .getResultList();
+    clients.forEach(System.out::println);
+
+    System.out.println("======= Para rangos, clientes con id entre ciertos números - Where y Between =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+    query.select(from).where(criteriaBuilder.between(from.get("id"), 2L, 6L));
+    clients = em.createQuery(query)
+                    .getResultList();
+    clients.forEach(System.out::println);
+
+
+
+
+    System.out.println("======= PRUEBAS =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+
+    query.select(from).where(criteriaBuilder.equal(from.get("id"), 2L));
+    clients = em.createQuery(query)
+            .getResultList();
+    clients.forEach(System.out::println);
+
 
 
 
