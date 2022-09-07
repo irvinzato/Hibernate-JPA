@@ -75,6 +75,29 @@ public class HibernateCriteria {
                     .getResultList();
     clients.forEach(System.out::println);
 
+    System.out.println("======= Parecido al igual pero varios (IN) - Where, IN =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+    query.select(from).where(from.get("name").in("Irving", "Jade", "Angeles", "Lubu")); //Pudiera tenerlo como una lista por parámetro
+    clients = em.createQuery(query)
+                    .getResultList();
+    clients.forEach(System.out::println);
+
+    System.out.println("======= Filtrar usando predicados MAYOR QUE o MAYOR IGUAL QUE =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+    query.select(from).where(criteriaBuilder.ge(from.get("id"), 3L));   //"ge" Mayor o igual a 3 - "gt" es para solo mayor
+    clients = em.createQuery(query)
+                    .getResultList();
+    clients.forEach(System.out::println);
+
+    System.out.println("======= Nombres MAYORES QUE 5 =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+    query.select(from).where(criteriaBuilder.gt(criteriaBuilder.length(from.get("name")), 5));    //"le" menor o igual - "lt" es para menor que
+    clients = em.createQuery(query)
+                    .getResultList();
+    clients.forEach(System.out::println);
 
 
 
