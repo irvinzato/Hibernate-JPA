@@ -115,6 +115,44 @@ public class HibernateCriteria {
             .getResultList();
     clients.forEach(System.out::println);
 
+    System.out.println("======= ORDER BY - ASC, DESC =======");
+    System.out.println("======= Ordenamiento por nombre y apellido =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+    query.select(from).orderBy(criteriaBuilder.asc(from.get("name")), criteriaBuilder.asc(from.get("lastName"))); //OrderBy puede tener más de 1 criterio
+    clients = em.createQuery(query)
+                    .getResultList();
+    clients.forEach(System.out::println);
+
+    System.out.println("======= Consulta por id en especifico con parámetro =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+    ParameterExpression<Long> idParameter = criteriaBuilder.parameter(Long.class, "idP");
+    query.select(from).where(criteriaBuilder.equal(from.get("id"), idParameter));
+    Cliente client = em.createQuery(query)
+                    .setParameter("idP", 7L)
+                    .getSingleResult();
+    System.out.println("Cliente encontrado - " + client);
+
+    System.out.println("======= Solo quiero obtener los nombre de los clientes =======");
+    CriteriaQuery<String> queryString = criteriaBuilder.createQuery(String.class);    //Devuelvo solo Strings
+    from = queryString.from(Cliente.class);         //De la misma tabla
+    queryString.select(from.get("name"));
+    List<String> namesString = em.createQuery(queryString)
+                    .getResultList();
+    namesString.forEach(System.out::println);
+
+    System.out.println("======= DISTINCT - Solo quiero obtener los nombre de los clientes pero SIN REPETIRLOS =======");
+    queryString = criteriaBuilder.createQuery(String.class);    //Devuelvo solo Strings
+    from = queryString.from(Cliente.class);         //De la misma tabla
+    queryString.select(from.get("name")).distinct(true);
+    namesString = em.createQuery(queryString)
+                    .getResultList();
+    namesString.forEach(System.out::println);
+
+
+
+
     System.out.println("======= PRUEBAS =======");
     query = criteriaBuilder.createQuery(Cliente.class);
     from = query.from(Cliente.class);
