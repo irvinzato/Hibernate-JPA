@@ -97,6 +97,7 @@ public class HibernateCriteria {
     clients.forEach(System.out::println);
 
     System.out.println("======= Predicados AND(Conjunción) Y OR(Disyunción) =======");
+    System.out.println("======= Consulta que cumple dos condiciones AND =======");
     query = criteriaBuilder.createQuery(Cliente.class);
     from = query.from(Cliente.class);
     Predicate byName = criteriaBuilder.equal(from.get("name"), "Lubu");
@@ -107,6 +108,7 @@ public class HibernateCriteria {
     clients.forEach(System.out::println);
 
     System.out.println("======= Predicados AND(Conjunción) Y OR(Disyunción) combinados =======");
+    System.out.println("======= Consulta que cumple dos condiciones AND, una de ellas es un OR =======");
     query = criteriaBuilder.createQuery(Cliente.class);
     from = query.from(Cliente.class);
     Predicate greaterThan = criteriaBuilder.ge(from.get("id"), 4L);
@@ -150,6 +152,56 @@ public class HibernateCriteria {
                     .getResultList();
     namesString.forEach(System.out::println);
 
+    System.out.println("======= Consulta por nombre y apellidos concatenados - CONCAT =======");
+    queryString = criteriaBuilder.createQuery(String.class);
+    from = queryString.from(Cliente.class);
+    queryString.select(criteriaBuilder.concat(criteriaBuilder.concat(from.get("name"), " "), from.get("lastName")));
+    namesString = em.createQuery(queryString)
+                    .getResultList();
+    namesString.forEach(System.out::println);
+
+    System.out.println("======= ======= ======= =======");
+    System.out.println("======= MULTI SELECT =======");
+    System.out.println("======= ======= ======= =======");
+    System.out.println("======= Consulta de campos personalizados del entity cliente =======");
+    CriteriaQuery<Object[]> queryObj = criteriaBuilder.createQuery(Object[].class);     //Personalizo un objeto de resultados
+    from = queryObj.from(Cliente.class);
+    queryObj.multiselect(from.get("id"), from.get("name"), from.get("lastName"));   //"multiselect" devuelve muchos, "select" solo uno
+    List<Object[]> registers = em.createQuery(queryObj)
+                    .getResultList();
+    registers.forEach(reg -> {
+      Long idObj = (Long) reg[0];
+      String nameObj = (String) reg[1];
+      String lastNameObj = (String) reg[2];
+      System.out.println("ID - " + idObj + " NOMBRE - " + nameObj + " APELLIDO - " + lastNameObj);
+    });
+
+    System.out.println("======= Consulta de campos personalizados del entity cliente con WHERE y un UPPER =======");
+    queryObj = criteriaBuilder.createQuery(Object[].class);
+    from = queryObj.from(Cliente.class);
+    queryObj.multiselect(from.get("id"), criteriaBuilder.upper(from.get("name")), from.get("lastName")).where(criteriaBuilder.like(from.get("name"),"%lu%"));
+    registers = em.createQuery(queryObj)
+                    .getResultList();
+    registers.forEach(reg -> {
+      Long idObj = (Long) reg[0];
+      String nameObj = (String) reg[1];
+      String lastNameObj = (String) reg[2];
+      System.out.println("ID - " + idObj + " NOMBRE - " + nameObj + " APELLIDO - " + lastNameObj);
+    });
+
+    System.out.println("======= Consulta de UN SOLO REGISTRO con campos personalizados =======");
+    queryObj = criteriaBuilder.createQuery(Object[].class);
+    from = queryObj.from(Cliente.class);
+    queryObj.multiselect(from.get("name"), from.get("lastName"), from.get("wayToPay")).where(criteriaBuilder.equal(from.get("id"), 7L));
+    Object[] register = em.createQuery(queryObj)
+                    .getSingleResult();
+    String nameObj = (String) register[0];
+    String lastNameObj = (String) register[1];
+    String payObj = (String) register[2];
+    System.out.println("NOMBRE - " + nameObj + " APELLIDO - " + lastNameObj + " FORMA DE PAGO " + payObj);
+
+
+
 
 
 
@@ -161,11 +213,6 @@ public class HibernateCriteria {
     clients = em.createQuery(query)
             .getResultList();
     clients.forEach(System.out::println);
-
-
-
-
-
 
 
     em.close();
