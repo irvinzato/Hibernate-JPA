@@ -201,6 +201,40 @@ public class HibernateCriteria {
     System.out.println("NOMBRE - " + nameObj + " APELLIDO - " + lastNameObj + " FORMA DE PAGO " + payObj);
 
 
+    System.out.println("======= ======= ======= =======");
+    System.out.println("======= FUNCIÓN DE AGREGACIÓN =======");
+    System.out.println("======= ======= ======= =======");
+    System.out.println("======= Contar registros de la consulta con - COUNT =======");
+    CriteriaQuery<Long> queryLong = criteriaBuilder.createQuery(Long.class);
+    from = queryLong.from(Cliente.class);
+    queryLong.select(criteriaBuilder.count(from));  //Pudiera poner from.get() pero el resultado es el mismo
+    Long total = em.createQuery(queryLong)
+                    .getSingleResult();
+    System.out.println("Total de registros en tabla clientes - " + total);
+
+    System.out.println("======= Sumar datos de algún campo de la tabla - SUM =======");
+    queryLong = criteriaBuilder.createQuery(Long.class);
+    from = queryLong.from(Cliente.class);
+    queryLong.select(criteriaBuilder.sum(from.get("id")));
+    total = em.createQuery(queryLong)
+                    .getSingleResult();
+    System.out.println("Suma de ids - " + total);
+
+    System.out.println("======= MÁXIMO O MÍNIMO =======");
+    queryLong = criteriaBuilder.createQuery(Long.class);
+    from = queryLong.from(Cliente.class);
+    queryLong.select(criteriaBuilder.max(from.get("id")));
+    Long maxId = em.createQuery(queryLong)
+                    .getSingleResult();
+    System.out.println("ID máximo - " + maxId);
+
+    System.out.println("======= Ejemplo de varios resultados de funciones de agregación en una sola consulta =======");
+    queryObj = criteriaBuilder.createQuery(Object[].class);
+    from = queryObj.from(Cliente.class);
+    queryObj.multiselect(criteriaBuilder.count(from.get("id")), criteriaBuilder.sum(from.get("id")), criteriaBuilder.min(from.get("id")), criteriaBuilder.max(from.get("id")));
+    Object[] statistics = em.createQuery(queryObj)
+                    .getSingleResult();
+    System.out.println("CONTEO DE IDS - " + statistics[0] + " SUMAS DE IDS - " + statistics[1] + " ID MAS CHICO - " + statistics[2] + " ID MAS GRANDE - " + statistics[3]);
 
 
 
