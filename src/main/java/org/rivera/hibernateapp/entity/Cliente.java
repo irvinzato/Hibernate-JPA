@@ -79,4 +79,7 @@ public class Cliente {
             ", creado en = " + createIn +
             ", editado en = " + editedIn;
   }
+
+  //Nota - V.510 Se explica como añadir una configuración en "persistence.xml" para que la tabla se elimine y se vuelva a crear al utilizarla
+  //E importaciones de tablas Sql
 }
