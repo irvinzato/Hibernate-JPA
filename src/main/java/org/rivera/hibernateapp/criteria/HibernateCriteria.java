@@ -1,10 +1,7 @@
 package org.rivera.hibernateapp.criteria;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.ParameterExpression;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.rivera.hibernateapp.entity.Cliente;
 import org.rivera.hibernateapp.util.JpaUtil;
 
@@ -99,7 +96,24 @@ public class HibernateCriteria {
                     .getResultList();
     clients.forEach(System.out::println);
 
+    System.out.println("======= Predicados AND(Conjunción) Y OR(Disyunción) =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+    Predicate byName = criteriaBuilder.equal(from.get("name"), "Lubu");
+    Predicate byPay = criteriaBuilder.equal(from.get("wayToPay"), "paypal");
+    query.select(from).where(criteriaBuilder.and(byName, byPay)); //Se cumplen todas las condiciones que se pasan en "AND" - con "OR" se incluye "o que tenga"
+    clients = em.createQuery(query)
+                    .getResultList();
+    clients.forEach(System.out::println);
 
+    System.out.println("======= Predicados AND(Conjunción) Y OR(Disyunción) combinados =======");
+    query = criteriaBuilder.createQuery(Cliente.class);
+    from = query.from(Cliente.class);
+    Predicate greaterThan = criteriaBuilder.ge(from.get("id"), 4L);
+    query.select(from).where(criteriaBuilder.and( greaterThan, criteriaBuilder.or(byName, byPay))); //El or puede ser uno u otro para cumplir
+    clients = em.createQuery(query)
+            .getResultList();
+    clients.forEach(System.out::println);
 
     System.out.println("======= PRUEBAS =======");
     query = criteriaBuilder.createQuery(Cliente.class);
